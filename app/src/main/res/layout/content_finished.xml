@@ -13,4 +13,9 @@
     tools:context="no.enkeloversikt.newroute.new_route.FinishedActivity"
     tools:showIn="@layout/activity_finished">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Da var den økten ferdig 🎉" />
+
 </RelativeLayout>
