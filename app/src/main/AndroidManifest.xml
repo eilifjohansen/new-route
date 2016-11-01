@@ -43,7 +43,11 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".LoggingActivity"></activity>
+        <activity android:name=".LoggingActivity" />
+        <activity
+            android:name=".FinishedActivity"
+            android:label="@string/title_activity_finished"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
