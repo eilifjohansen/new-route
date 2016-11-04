@@ -6,21 +6,20 @@ package no.enkeloversikt.newroute.new_route.database;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Random;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String databaseName = "NewRoute.db";
     private static final String tableName = "geoLocations";
     private static final int metersInADegree = 111300;
+
+    private final String tableColValue = "val";
+    private final String tableColType = "type";
 
     public DatabaseHelper(Context context) {
         super(context, databaseName, null, 1);
@@ -35,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
         db.execSQL("CREATE TABLE " + tableName + " ('id' INTEGER PRIMARY KEY, 'lat' decimal(10, 8) NOT NULL, 'lng' decimal(10, 8) NOT NULL, 'visited' int(1) DEFAULT '0')");
+        db.execSQL("CREATE TABLE data ('id' INTEGER PRIMARY KEY, 'type' text NOT NULL, 'val' text NOT NULL)");
     }
 
 
@@ -91,13 +91,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public GeoLocation[] haversine(){
-        //SELECT geo.*, ( 6371 * acos( cos( radians(geo.lat) ) * cos( radians( 37 ) ) * cos( radians( 5 ) - radians(geo.lng) ) + sin( radians(geo.lat) ) * sin( radians( 37 ) ) ) ) AS distance FROM geoLocations as geo WHERE visited = 0 GROUP BY geo.id HAVING distance < 0.25 ORDER BY distance
-
-        GeoLocation[] locs = new GeoLocation[5];
-        return locs;
-    }
-
     /**
      * this is very similar to the function abow... need to make the code better if we have time.
      * @return
@@ -133,6 +126,78 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM geoLocations WHERE visited = 1", new String[]{});
         return c.getCount();
+    }
+
+
+    /**
+     * Insert a row into the database
+     * @param type
+     * @param value
+     * @return
+     */
+    private boolean insertData(String type, String value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(tableColValue, value);
+        cv.put(tableColType, type);
+
+        long result = db.insert("data", null, cv);
+
+        return result > -1;
+    }
+
+    /**
+     * Update a row in the database
+     * @param type
+     * @param value
+     * @return
+     */
+    private boolean updateData(String type, String value){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues cv = new ContentValues();
+        cv.put(tableColValue, value);
+
+        int result = db.update("data", cv, tableColType + " = ?", new String[] {String.valueOf(type) });
+
+        return result > -1;
+    }
+
+    /**
+     * Fetch a value from the database
+     * @param type
+     * @return value
+     */
+    public String fetchType(String type){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor c = db.rawQuery("SELECT * FROM data WHERE type = ?", new String[] {String.valueOf(type) });
+
+
+        if(!c.moveToFirst()) {
+            c.close();
+            return null;
+        }
+
+
+        String val = c.getString(c.getColumnIndex(tableColValue));
+        c.close();
+        return val;
+
+    }
+
+    /**
+     * Update or Insert a value into the database
+     * @param type
+     * @param value
+     */
+    public void updateOrInsert(String type, String value){
+        if(!insertData(type, value)) {
+            updateData(type, value);
+        }
     }
 
 }

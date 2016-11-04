@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -43,9 +44,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    private int REFRESH_TIME = 1000;
+    private double lastLat = 0;
+    private double lastLng = 0;
 
-    private boolean customLocation = false;
+    private Vibrator vib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         db = new DatabaseHelper(this);
 
+        vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         apiProgress = new ProgressDialog(this);
         apiProgress.setMessage("loading...");
         apiProgress.show();
@@ -122,13 +125,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                Log.v("newLatLng", "Location changed");
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
 
                 LatLng current = new LatLng(latitude, longitude);
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(current));
-
+                calcTotalDistance(latitude, longitude);
                 setLocations(latitude, longitude);
             }
 
@@ -136,30 +140,58 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             public void onProviderEnabled(String provider) {
+                Toast.makeText(getBaseContext(), "GPS enabled", Toast.LENGTH_SHORT).show();
             }
 
             public void onProviderDisabled(String provider) {
-                Toast.makeText(getBaseContext(), "GPS disabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "GPS disabled: Please enable your location service", Toast.LENGTH_SHORT).show();
             }
         };
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+    }
+
+    public void calcTotalDistance(double lat, double lng){
+
+        if(lastLat == 0){
+            lastLat = lat;
+            lastLng = lng;
+            return;
+        }
+        float results[] = new float[2];
+        Location.distanceBetween(lat, lng, lastLat, lastLng, results);
+
+        String dist = db.fetchType("totalDistance");
+
+        if(dist == null){
+            db.updateOrInsert("totalDistance", Float.toString(results[0]));
+        } else {
+
+            Log.v("newLatLng", Float.toString(results[0]));
+            Log.v("newLatLng", dist);
+            double addedDist = results[0] + Double.parseDouble(dist);
+            Log.v("newLatLng", Double.toString(addedDist));
+            db.updateOrInsert("totalDistance", Double.toString(addedDist));
+
+            Log.v("newLatLng", db.fetchType("totalDistance"));
+        }
+
+        lastLat = lat;
+        lastLng = lng;
 
     }
 
 
     public void setLocations(double lat, double lng){
-        mMap.clear();
-
         GeoLocation[] allGeoLocs = db.fetchAll();
 
-        if(allGeoLocs.length < 5){
-            db.createNewPoints(lat, lng, 5 - allGeoLocs.length, 1000);
+        if(allGeoLocs.length < 100){
+            db.createNewPoints(lat, lng, 100 - allGeoLocs.length, 1000);
             allGeoLocs = db.fetchAll();
         }
 
         float results[] = new float[2];
-
+        mMap.clear();
         for (GeoLocation loc : allGeoLocs) {
 
             Circle spot = mMap.addCircle(new CircleOptions()
@@ -175,6 +207,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getBaseContext(), "Congratulations", Toast.LENGTH_SHORT).show();
                 db.createNewPoints(lat, lng, 1, 1000);
                 db.setPointAsVisited(loc);
+                vib.vibrate(500);
                 spot.remove();
             }
         }
@@ -182,7 +215,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView score = (TextView) findViewById(R.id.scoreView);
         String scoreText = Integer.toString(db.getScore());
         score.setText(scoreText);
-
     }
 
     /**
@@ -201,10 +233,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
-
-        setLocations(latitude, longitude);
-        LatLng current = new LatLng(latitude, longitude);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
     }
 
 }
