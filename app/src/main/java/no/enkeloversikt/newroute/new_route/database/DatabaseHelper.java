@@ -129,4 +129,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public int getScore(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM geoLocations WHERE visited = 1", new String[]{});
+        return c.getCount();
+    }
+
 }

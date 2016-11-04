@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -70,7 +71,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * Permission request for Android 6.0 and later
      */
     public void requestFineLocationPermit() {
-        Log.v("gpstest", "fineLocation permission");
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -114,10 +114,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      * request location updates
      */
     public void requestLoc() {
-        Log.v("gpstest", "Request Loc");
-
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.v("gpstest", "Denied location");
             return;
         }
 
@@ -125,52 +122,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                Log.v("newLatLng", "loc changed");
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
+
                 LatLng current = new LatLng(latitude, longitude);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
-                mMap.clear();
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(current));
 
-               //GeoLocation[] nearByGeoLocs = db.fetchNearBy(latitude, longitude);
-               //for (GeoLocation loc : nearByGeoLocs) {
-               //     //Points within 250m
-               //     //add score or whatever
-               //     db.setPointAsVisited(loc);
-               //}
-
-               // db.createNewPoints(latitude, longitude, 5, 1000);
-
-                GeoLocation[] allGeoLocs = db.fetchAll();
-                if(allGeoLocs.length < 5){
-                    db.createNewPoints(latitude, longitude, 5 - allGeoLocs.length, 1000);
-                    allGeoLocs = db.fetchAll();
-                }
-
-                    float results[] = new float[2];
-
-                    for (GeoLocation loc : allGeoLocs) {
-
-
-                        //mMap.addMarker(new MarkerOptions().position(loc.getLatLng()).title("Distance: " + loc.getDistance()));
-                        Circle spot = mMap.addCircle(new CircleOptions()
-                               .center(loc.getLatLng())
-                               .radius(125)
-                               .strokeColor(Color.argb(70, 229, 57, 53))
-                               .fillColor(Color.argb(40, 244, 67, 54)));
-
-                        Location.distanceBetween( latitude, longitude,
-                                spot.getCenter().latitude, spot.getCenter().longitude, results);
-
-                        if( results[0] < spot.getRadius() ){
-                            Log.v("newLatLng", "ID: " + loc.getId() + "--" +results[0] + " < " + spot.getRadius());
-                            Toast.makeText(getBaseContext(), "Congratulations", Toast.LENGTH_SHORT).show();
-                            db.createNewPoints(latitude, longitude, 1, 1000);
-                            db.setPointAsVisited(loc);
-                            spot.remove();
-                        }
-                    }
+                setLocations(latitude, longitude);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -184,12 +143,47 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         };
 
-        // 6000mm == 6s
-        Log.v("gpstest", "locationManager");
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
     }
 
+
+    public void setLocations(double lat, double lng){
+        mMap.clear();
+
+        GeoLocation[] allGeoLocs = db.fetchAll();
+
+        if(allGeoLocs.length < 5){
+            db.createNewPoints(lat, lng, 5 - allGeoLocs.length, 1000);
+            allGeoLocs = db.fetchAll();
+        }
+
+        float results[] = new float[2];
+
+        for (GeoLocation loc : allGeoLocs) {
+
+            Circle spot = mMap.addCircle(new CircleOptions()
+                    .center(loc.getLatLng())
+                    .radius(125)
+                    .strokeColor(Color.argb(70, 229, 57, 53))
+                    .fillColor(Color.argb(40, 244, 67, 54)));
+
+            Location.distanceBetween( lat, lng,
+                    spot.getCenter().latitude, spot.getCenter().longitude, results);
+
+            if( results[0] < spot.getRadius() ){
+                Toast.makeText(getBaseContext(), "Congratulations", Toast.LENGTH_SHORT).show();
+                db.createNewPoints(lat, lng, 1, 1000);
+                db.setPointAsVisited(loc);
+                spot.remove();
+            }
+        }
+
+        TextView score = (TextView) findViewById(R.id.scoreView);
+        String scoreText = Integer.toString(db.getScore());
+        score.setText(scoreText);
+
+    }
 
     /**
      * Google maps init
@@ -198,8 +192,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.v("gpstest", "maps ready");
-
         apiProgress.hide();
         apiProgress.dismiss();
 
@@ -209,6 +201,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+        setLocations(latitude, longitude);
+        LatLng current = new LatLng(latitude, longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
     }
 
 }
