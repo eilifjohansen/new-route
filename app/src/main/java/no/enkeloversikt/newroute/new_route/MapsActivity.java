@@ -130,7 +130,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 longitude = location.getLongitude();
 
                 LatLng current = new LatLng(latitude, longitude);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 12));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15));
                 mMap.clear();
 
                //GeoLocation[] nearByGeoLocs = db.fetchNearBy(latitude, longitude);
@@ -151,7 +151,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     float results[] = new float[2];
 
                     for (GeoLocation loc : allGeoLocs) {
-                        Log.v("gpstest", "locations: " + loc.getDistance());
+
 
                         //mMap.addMarker(new MarkerOptions().position(loc.getLatLng()).title("Distance: " + loc.getDistance()));
                         Circle spot = mMap.addCircle(new CircleOptions()

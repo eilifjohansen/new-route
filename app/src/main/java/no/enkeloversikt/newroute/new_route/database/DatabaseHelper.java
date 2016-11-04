@@ -103,7 +103,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return
      */
     public GeoLocation[] fetchAll(){
-        Log.v("gpstest", "db.fetchALL");
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Haversine Formula
@@ -119,8 +118,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 geoLocs[c.getPosition()].setLat(c.getDouble(c.getColumnIndex("lat")));
                 geoLocs[c.getPosition()].setLng(c.getDouble(c.getColumnIndex("lng")));
                 geoLocs[c.getPosition()].setDistance(0);
-
-                Log.v("gpstest", Integer.toString(geoLocs[c.getPosition()].getId()));
             }
 
         } finally {
