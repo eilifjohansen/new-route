@@ -13,14 +13,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import no.enkeloversikt.newroute.new_route.database.DatabaseHelper;
 import no.enkeloversikt.newroute.new_route.database.GeoLocation;
@@ -124,7 +125,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                Log.v("gpstest", "loc changed");
+                Log.v("newLatLng", "loc changed");
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
@@ -132,33 +133,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 12));
                 mMap.clear();
 
-                //GeoLocation[] nearByGeoLocs = db.fetchNearBy(latitude, longitude);
+               //GeoLocation[] nearByGeoLocs = db.fetchNearBy(latitude, longitude);
                //for (GeoLocation loc : nearByGeoLocs) {
-               //    // Points within 250m
-               //    // add score or whatever
-               //    // remove point
+               //     //Points within 250m
+               //     //add score or whatever
+               //     db.setPointAsVisited(loc);
                //}
 
-                GeoLocation[] allGeoLocs = db.fetchAll();
+               // db.createNewPoints(latitude, longitude, 5, 1000);
 
-                if(allGeoLocs.length == 1){
-                    db.createNewPoints(latitude, longitude, 5, 1000);
-                } else {
+                GeoLocation[] allGeoLocs = db.fetchAll();
+                if(allGeoLocs.length < 5){
+                    db.createNewPoints(latitude, longitude, 5 - allGeoLocs.length, 1000);
+                    allGeoLocs = db.fetchAll();
+                }
+
+                    float results[] = new float[2];
 
                     for (GeoLocation loc : allGeoLocs) {
                         Log.v("gpstest", "locations: " + loc.getDistance());
 
-                        mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(), loc.getLng())).title("Distance: " + loc.getDistance()));
+                        //mMap.addMarker(new MarkerOptions().position(loc.getLatLng()).title("Distance: " + loc.getDistance()));
+                        Circle spot = mMap.addCircle(new CircleOptions()
+                               .center(loc.getLatLng())
+                               .radius(125)
+                               .strokeColor(Color.argb(70, 229, 57, 53))
+                               .fillColor(Color.argb(40, 244, 67, 54)));
 
-                        mMap.addCircle(new CircleOptions()
-                                .center(new LatLng(loc.getLat(), loc.getLng()))
-                                .radius(250)
-                                .strokeColor(Color.rgb(229, 57, 53))
-                                .fillColor(Color.rgb(244, 67, 54)));
+                        Location.distanceBetween( latitude, longitude,
+                                spot.getCenter().latitude, spot.getCenter().longitude, results);
+
+                        if( results[0] < spot.getRadius() ){
+                            Log.v("newLatLng", "ID: " + loc.getId() + "--" +results[0] + " < " + spot.getRadius());
+                            Toast.makeText(getBaseContext(), "Congratulations", Toast.LENGTH_SHORT).show();
+                            db.createNewPoints(latitude, longitude, 1, 1000);
+                            db.setPointAsVisited(loc);
+                            spot.remove();
+                        }
                     }
-
-                }
-
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -168,12 +180,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             public void onProviderDisabled(String provider) {
+                Toast.makeText(getBaseContext(), "GPS disabled", Toast.LENGTH_SHORT).show();
             }
         };
 
         // 6000mm == 6s
         Log.v("gpstest", "locationManager");
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, REFRESH_TIME, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
     }
 

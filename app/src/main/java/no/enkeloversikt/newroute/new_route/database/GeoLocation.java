@@ -1,5 +1,7 @@
 package no.enkeloversikt.newroute.new_route.database;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by Agne Ødegaard on 03/11/2016.
  */
@@ -41,5 +43,9 @@ public class GeoLocation {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LatLng getLatLng(){
+        return new LatLng(this.lat, this.lng);
     }
 }

@@ -32,8 +32,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + tableName + " (id int(11) AUTO_INCREMENT, lat decimal(10, 8) NOT NULL, lng decimal(11, 8) NOT NULL, visited tinyint(1) DEFAULT '0')");
+
+
+        db.execSQL("CREATE TABLE " + tableName + " ('id' INTEGER PRIMARY KEY, 'lat' decimal(10, 8) NOT NULL, 'lng' decimal(10, 8) NOT NULL, 'visited' int(1) DEFAULT '0')");
     }
+
+
 
     /**
      * When the app is uninstalled`
@@ -64,56 +68,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             GeoLocation loc = geo.newRandomLocation(lat, lng, radius);
             double newLat = loc.getLat();
             double newLng = loc.getLng();
-
             SQLiteDatabase db = this.getWritableDatabase();
 
             ContentValues cv = new ContentValues();
             cv.put("lat", newLat);
             cv.put("lng", newLng);
-
-            if(db.insert(tableName, null, cv) > -1) return false;
+            db.insert(tableName, null, cv);
 
         }
         return true;
     }
 
-    public boolean setPointAsVisited(){
-
-
-        return true;
-    }
-
-    /**
-     * fetch all gps points that are closer then 250m away
-     * @param lat
-     * @param lng
-     * @return
-     */
-    public GeoLocation[] fetchNearBy(double lat, double lng){
-        Log.v("gpstest", "db.fetchNearBy");
+    public boolean setPointAsVisited(GeoLocation loc){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // Haversine Formula
-        Cursor c = db.rawQuery("SELECT geo.*, ( 6371 * acos( cos( radians(geo.lat) ) * cos( radians( "+Double.toString(lat)+" ) ) * cos( radians( "+Double.toString(lng)+" ) - radians(geo.lng) ) + sin( radians(geo.lat) ) * sin( radians( "+Double.toString(lat)+" ) ) ) ) AS distance FROM geoLocations as geo WHERE visited = 0 HAVING distance < 0.25 ORDER BY distance ",
-                new String[] {});
+        ContentValues cv = new ContentValues();
 
-        GeoLocation[] geoLocs = new GeoLocation[c.getCount()];
+        cv.put("visited", 1);
 
-        try{
-            while(c.moveToNext()){
-                geoLocs[c.getPosition()] = new GeoLocation();
-                geoLocs[c.getPosition()].setId(c.getInt(c.getColumnIndex("id")));
-                geoLocs[c.getPosition()].setLat(c.getDouble(c.getColumnIndex("lat")));
-                geoLocs[c.getPosition()].setLng(c.getDouble(c.getColumnIndex("lng")));
-                geoLocs[c.getPosition()].setDistance(c.getFloat(c.getColumnIndex("distance")));
-            }
+        db.update(tableName, cv, "id="+loc.getId(), null);
 
-        } finally {
-            c.close();
-        }
+        return true;
+    }
 
-        return geoLocs;
+    public GeoLocation[] haversine(){
+        //SELECT geo.*, ( 6371 * acos( cos( radians(geo.lat) ) * cos( radians( 37 ) ) * cos( radians( 5 ) - radians(geo.lng) ) + sin( radians(geo.lat) ) * sin( radians( 37 ) ) ) ) AS distance FROM geoLocations as geo WHERE visited = 0 GROUP BY geo.id HAVING distance < 0.25 ORDER BY distance
 
+        GeoLocation[] locs = new GeoLocation[5];
+        return locs;
     }
 
     /**
@@ -136,7 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 geoLocs[c.getPosition()].setId(c.getInt(c.getColumnIndex("id")));
                 geoLocs[c.getPosition()].setLat(c.getDouble(c.getColumnIndex("lat")));
                 geoLocs[c.getPosition()].setLng(c.getDouble(c.getColumnIndex("lng")));
-                geoLocs[c.getPosition()].setDistance(c.getFloat(c.getColumnIndex("distance")));
+                geoLocs[c.getPosition()].setDistance(0);
 
                 Log.v("gpstest", Integer.toString(geoLocs[c.getPosition()].getId()));
             }
