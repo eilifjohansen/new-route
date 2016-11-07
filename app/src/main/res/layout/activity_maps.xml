@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorAbort"
         app:srcCompat="@drawable/ic_stop_white_24dp" />
 
     <TextView

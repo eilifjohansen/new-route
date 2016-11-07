@@ -62,7 +62,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         apiProgress = new ProgressDialog(this);
-        apiProgress.setMessage("loading...");
+        apiProgress.setMessage(getString(R.string.loading_location_dialog));
         apiProgress.show();
 
         requestFineLocationPermit();
@@ -125,6 +125,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                apiProgress.hide();
+                apiProgress.dismiss();
+
                 Log.v("newLatLng", "Location changed");
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
@@ -224,9 +227,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        apiProgress.hide();
-        apiProgress.dismiss();
-
         mMap = googleMap;
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
