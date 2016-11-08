@@ -42,8 +42,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/title_activity_maps" />
+            android:label="@string/title_activity_maps"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
@@ -51,7 +51,8 @@
         <activity
             android:name=".FinishedActivity"
             android:label="@string/title_activity_finished"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".SettingsListActivity"></activity>
     </application>
 
 </manifest>

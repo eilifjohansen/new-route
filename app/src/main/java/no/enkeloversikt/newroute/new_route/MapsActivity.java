@@ -51,6 +51,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private int total_points = 5;
 
+    private boolean firstTimeLoadLocation = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,18 +127,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        Location lastKnownLocation = locationManager.getLastKnownLocation(Context.LOCATION_SERVICE);
+
+        if(lastKnownLocation != null){
+            apiProgress.hide();
+            apiProgress.dismiss();
+
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+
+            setLocations(latitude, longitude);
+        }
+
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 apiProgress.hide();
                 apiProgress.dismiss();
 
-                Log.v("newLatLng", "Location changed");
                 latitude = location.getLatitude();
                 longitude = location.getLongitude();
 
-
-                LatLng current = new LatLng(latitude, longitude);
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(current));
                 calcTotalDistance(latitude, longitude);
                 setLocations(latitude, longitude);
             }
@@ -154,6 +164,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         };
 
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
+    }
+    public void updateCamera(double lat, double lng){
+        LatLng current = new LatLng(lat, lng);
+        if(firstTimeLoadLocation){
+
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15f));
+            firstTimeLoadLocation = false;
+        } else {
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(current));
+        }
     }
 
     public void calcTotalDistance(double lat, double lng){
@@ -187,6 +207,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void setLocations(double lat, double lng){
+        updateCamera(latitude, longitude);
         GeoLocation[] allGeoLocs = db.fetchAll();
 
         if(allGeoLocs.length < total_points){

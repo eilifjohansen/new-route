@@ -48,13 +48,11 @@ public class InformationActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent settingsActivity = new Intent(this, SettingsActivity.class);
-            settingsActivity.putExtra(AppCompatPreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.GeneralPreferenceFragment.class.getName());
-            settingsActivity.putExtra(AppCompatPreferenceActivity.EXTRA_NO_HEADERS, true);
+            Intent settingsActivity = new Intent(this, SettingsListActivity.class);
             startActivity(settingsActivity);
         }
         if (id == R.id.action_stats) {
-            Intent settingsActivity = new Intent(this, SettingsActivity.class);
+            Intent settingsActivity = new Intent(this, SettingsListActivity.class);
             startActivity(settingsActivity);
         }
 
