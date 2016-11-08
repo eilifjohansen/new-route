@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
+// Startup Activity
 public class InformationActivity extends AppCompatActivity {
 
     @Override
@@ -46,6 +48,12 @@ public class InformationActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent settingsActivity = new Intent(this, SettingsActivity.class);
+            settingsActivity.putExtra(AppCompatPreferenceActivity.EXTRA_SHOW_FRAGMENT, SettingsActivity.GeneralPreferenceFragment.class.getName());
+            settingsActivity.putExtra(AppCompatPreferenceActivity.EXTRA_NO_HEADERS, true);
+            startActivity(settingsActivity);
+        }
+        if (id == R.id.action_stats) {
             Intent settingsActivity = new Intent(this, SettingsActivity.class);
             startActivity(settingsActivity);
         }

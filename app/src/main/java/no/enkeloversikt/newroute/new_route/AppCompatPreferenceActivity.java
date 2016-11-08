@@ -20,6 +20,9 @@ public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
 
+    //public static final String EXTRA_SHOW_FRAGMENT = ":android:show_fragment";
+    //public static final String EXTRA_NO_HEADERS = ":android:no_headers";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getDelegate().installViewFactory();
