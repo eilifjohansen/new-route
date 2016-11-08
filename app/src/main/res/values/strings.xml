@@ -11,7 +11,7 @@
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
 
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_title_social_recommendations">Enable points</string>
     <string name="pref_description_social_recommendations">Recommendations for people to contact
         based on your message history
     </string>
@@ -75,7 +75,11 @@
 
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
-
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_finished">FinishedActivity</string>
+    <string name="action_stats">Statistics</string>
+    <string name="edit_radius">Set Radius</string>
+    <string name="edit_radius_sum">This changed the radius of spawing circles.</string>
+    <string name="edit_points">Points</string>
+    <string name="edit_points_sum">This changes the total amount of points visible on the map at any time</string>
 </resources>
