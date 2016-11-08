@@ -49,6 +49,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Vibrator vib;
 
+    private int total_points = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +173,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } else {
 
             Log.v("newLatLng", Float.toString(results[0]));
-            Log.v("newLatLng", dist);
             double addedDist = results[0] + Double.parseDouble(dist);
             Log.v("newLatLng", Double.toString(addedDist));
             db.updateOrInsert("totalDistance", Double.toString(addedDist));
@@ -188,8 +189,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void setLocations(double lat, double lng){
         GeoLocation[] allGeoLocs = db.fetchAll();
 
-        if(allGeoLocs.length < 100){
-            db.createNewPoints(lat, lng, 100 - allGeoLocs.length, 1000);
+        if(allGeoLocs.length < total_points){
+            db.createNewPoints(lat, lng, total_points - allGeoLocs.length, 1000);
             allGeoLocs = db.fetchAll();
         }
 
