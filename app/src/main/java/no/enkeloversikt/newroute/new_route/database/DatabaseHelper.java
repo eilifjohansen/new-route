@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
 
-        db.execSQL("CREATE TABLE " + tableName + " ('id' INTEGER PRIMARY KEY, 'lat' decimal(10, 8) NOT NULL, 'lng' decimal(10, 8) NOT NULL, 'visited' int(1) DEFAULT '0')");
+        db.execSQL("CREATE TABLE " + tableName + " ('id' INTEGER PRIMARY KEY, 'lat' decimal(10, 8) NOT NULL, 'lng' decimal(10, 8) NOT NULL, 'visited' int(1) DEFAULT '0', time datetime DEFAULT CURRENT_TIMESTAMP)");
         db.execSQL("CREATE TABLE data ('id' INTEGER PRIMARY KEY, 'type' text NOT NULL, 'val' text NOT NULL)");
     }
 
