@@ -76,7 +76,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_finished">FinishedActivity</string>
+    <string name="title_activity_finished">New Route</string>
     <string name="action_stats">Statistics</string>
     <string name="edit_radius">Set Radius</string>
     <string name="edit_radius_sum">This changed the radius of spawing circles.</string>
@@ -86,5 +86,5 @@
     <string name="reset_score">Reset Score</string>
     <string name="congratulations">Congratulations you got a point!</string>
     <string name="ok">OK</string>
-    <string name="alert_title">PointsCaptured</string>
+    <string name="alert_title">Point Captured</string>
 </resources>

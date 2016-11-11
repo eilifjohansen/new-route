@@ -32,7 +32,13 @@ public class FinishedActivity extends AppCompatActivity {
 
         TextView done = (TextView) findViewById(R.id.done);
 
-        int dist = Math.round(Float.parseFloat(db.fetchType("totalDistance")));
+        String d = db.fetchType("totalDistance");
+
+        int dist = 0;
+
+        if(d != null) {
+            dist = Math.round(Float.parseFloat(d));
+        }
 
         String doneText = "Done! You got " + Integer.toString(db.getScore()) + " points, while walking " +
                 dist + "m, congratulations";
