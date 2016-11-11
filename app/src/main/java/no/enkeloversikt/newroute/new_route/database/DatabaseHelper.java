@@ -79,6 +79,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * removes all points that the user did not walk to, so the app can create new points at the users location.
+     * @return
+     */
+    public boolean killPoints(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(tableName, "visited = 0", null) > 0;
+
+    }
+
+    public boolean killScore(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(tableName, "visited = 1", null) > 0;
+
+    }
+
     public boolean setPointAsVisited(GeoLocation loc){
         SQLiteDatabase db = this.getWritableDatabase();
 

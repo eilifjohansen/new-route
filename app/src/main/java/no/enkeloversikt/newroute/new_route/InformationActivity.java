@@ -51,10 +51,6 @@ public class InformationActivity extends AppCompatActivity {
             Intent settingsActivity = new Intent(this, SettingsListActivity.class);
             startActivity(settingsActivity);
         }
-        if (id == R.id.action_stats) {
-            Intent settingsActivity = new Intent(this, SettingsListActivity.class);
-            startActivity(settingsActivity);
-        }
 
         return super.onOptionsItemSelected(item);
     }

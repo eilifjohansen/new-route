@@ -82,4 +82,8 @@
     <string name="edit_radius_sum">This changed the radius of spawing circles.</string>
     <string name="edit_points">Points</string>
     <string name="edit_points_sum">This changes the total amount of points visible on the map at any time</string>
+    <string name="reset_points">Reset Locations</string>
+    <string name="reset_score">Reset Score</string>
+    <string name="congratulations">Congratulations you got a point!</string>
+    <string name="ok">OK</string>
 </resources>

@@ -9,9 +9,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
+
+import no.enkeloversikt.newroute.new_route.database.DatabaseHelper;
 
 
 public class FinishedActivity extends AppCompatActivity {
+
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,15 @@ public class FinishedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_finished);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        db = new DatabaseHelper(this);
+
+        TextView done = (TextView) findViewById(R.id.done);
+
+
+        String doneText = "Done! You got " + Integer.toString(db.getScore()) + " points, congratulations";
+        done.setText(doneText);
 
         final Intent mapsActivity = new Intent(this, MapsActivity.class);
 

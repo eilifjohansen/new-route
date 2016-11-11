@@ -2,6 +2,7 @@ package no.enkeloversikt.newroute.new_route;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +56,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private int total_points = 5;
 
+    private int points_radius = 500;
+
     private boolean firstTimeLoadLocation = true;
 
     @Override
@@ -82,6 +86,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(finishedActivity);
             }
         });
+
     }
 
 
@@ -179,7 +184,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void updateCamera(double lat, double lng){
         LatLng current = new LatLng(lat, lng);
         if(firstTimeLoadLocation){
-
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15f));
             firstTimeLoadLocation = false;
         } else {
@@ -222,7 +226,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GeoLocation[] allGeoLocs = db.fetchAll();
 
         if(allGeoLocs.length < total_points){
-            db.createNewPoints(lat, lng, total_points - allGeoLocs.length, 1000);
+            db.createNewPoints(lat, lng, total_points - allGeoLocs.length, points_radius);
             allGeoLocs = db.fetchAll();
         }
 
@@ -240,10 +244,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     spot.getCenter().latitude, spot.getCenter().longitude, results);
 
             if( results[0] < spot.getRadius() ){
-                Toast.makeText(getBaseContext(), "Congratulations", Toast.LENGTH_SHORT).show();
-                db.createNewPoints(lat, lng, 1, 1000);
-                db.setPointAsVisited(loc);
                 vib.vibrate(500);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.congratulations)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                //do things
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                db.createNewPoints(lat, lng, 1, points_radius);
+                db.setPointAsVisited(loc);
                 spot.remove();
             }
         }

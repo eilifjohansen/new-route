@@ -10,28 +10,31 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="no.enkeloversikt.newroute.new_route.SettingsListActivity">
 
-    <TextView
-        android:text="TextView"
+
+    <Button
+        android:text="@string/reset_score"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+        android:id="@+id/points"
+        android:elevation="0dp"
+        android:background="@color/colorPrimary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="wrap_content"
+    <Button
+        android:text="@string/reset_points"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginLeft="32dp">
+        android:id="@+id/reset"
+        android:elevation="0dp"
+        android:background="@color/colorPrimary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:layout_below="@+id/points"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
-            android:id="@+id/radius_edit"
-            android:layout_below="@+id/textView2"
-            android:layout_alignParentStart="true"
-            android:hint="@string/edit_radius_sum"/>
-    </android.support.design.widget.TextInputLayout>
+
 </RelativeLayout>
