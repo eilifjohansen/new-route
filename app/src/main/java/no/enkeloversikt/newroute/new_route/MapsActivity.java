@@ -234,16 +234,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if( results[0] < spot.getRadius() ){
                 vib.vibrate(500);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.congratulations)
-                        .setCancelable(false)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                //do things
-                            }
-                        });
-                AlertDialog alert = builder.create();
+                AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
+                alert.setTitle(R.string.alert_title);
+                alert.setMessage(R.string.congratulations);
+                alert.setPositiveButton(R.string.ok,null);
                 alert.show();
+
+
                 db.createNewPoints(lat, lng, 1, points_radius);
                 db.setPointAsVisited(loc);
                 spot.remove();
