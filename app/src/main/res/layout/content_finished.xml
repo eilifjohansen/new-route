@@ -16,6 +16,23 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Da var den økten ferdig 🎉" />
+        android:textSize="24sp"
+        android:text="Done!"
+        android:id="@+id/textView3" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentStart="true"
+        android:id="@+id/recyclerView" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Full log"
+        android:layout_below="@+id/recyclerView"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button2" />
 
 </RelativeLayout>

@@ -21,6 +21,14 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:adjustViewBounds="true"
+        android:src="@drawable/nature_end"
+        android:id="@+id/imageView" />
+
     <include layout="@layout/content_finished" />
 
     <android.support.design.widget.FloatingActionButton

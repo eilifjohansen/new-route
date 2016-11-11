@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/temp_logo"/>
+            android:src="@drawable/ic_new_route_4x"/>
     </item>
 
 </layer-list>
