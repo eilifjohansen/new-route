@@ -143,18 +143,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        Location lastKnownLocation = locationManager.getLastKnownLocation(Context.LOCATION_SERVICE);
-
-        if(lastKnownLocation != null){
-            apiProgress.hide();
-            apiProgress.dismiss();
-
-            latitude = lastKnownLocation.getLatitude();
-            longitude = lastKnownLocation.getLongitude();
-
-            setLocations(latitude, longitude);
-        }
-
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 apiProgress.hide();
@@ -280,6 +268,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if(lastKnownLocation != null){
+            apiProgress.hide();
+            apiProgress.dismiss();
+
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+
+            setLocations(latitude, longitude);
+        }
     }
 
 }
