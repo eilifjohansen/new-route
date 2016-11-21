@@ -74,6 +74,10 @@ public class FinishedActivity extends AppCompatActivity {
             Intent settingsActivity = new Intent(this, SettingsListActivity.class);
             startActivity(settingsActivity);
         }
+        if (id == R.id.action_credits) {
+            Intent creditsActivity = new Intent(this, CreditsActivity.class);
+            startActivity(creditsActivity);
+        }
 
         return super.onOptionsItemSelected(item);
     }

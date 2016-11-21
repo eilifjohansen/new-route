@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:adjustViewBounds="true"
-        android:src="@drawable/nature"
+        android:src="@drawable/start_scene"
         android:id="@+id/imageView" />
 
     <include layout="@layout/content_information"/>
