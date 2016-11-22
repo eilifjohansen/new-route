@@ -194,13 +194,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(dist == null){
             db.updateOrInsert("totalDistance", Float.toString(results[0]));
         } else {
-
-            Log.v("newLatLng", Float.toString(results[0]));
             double addedDist = results[0] + Double.parseDouble(dist);
-            Log.v("newLatLng", Double.toString(addedDist));
             db.updateOrInsert("totalDistance", Double.toString(addedDist));
-
-            Log.v("newLatLng", db.fetchType("totalDistance"));
         }
 
         lastLat = lat;
@@ -213,8 +208,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateCamera(latitude, longitude);
         GeoLocation[] allGeoLocs = db.fetchAll();
 
-        if(allGeoLocs.length < total_points){
-            db.createNewPoints(lat, lng, total_points - allGeoLocs.length, points_radius);
+        String level = db.fetchType("level");
+        if(level == null){
+            db.updateOrInsert("level", "1");
+            level = "1";
+        }
+
+        if(allGeoLocs.length < 1){
+            int lvl = Integer.parseInt(level);
+            double points = Math.sqrt(lvl * 1.5);
+            db.createNewPoints(lat, lng, (int) points, points_radius);
             allGeoLocs = db.fetchAll();
         }
 
@@ -241,14 +244,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 alert.show();
 
 
-                db.createNewPoints(lat, lng, 1, points_radius);
+                //db.createNewPoints(lat, lng, 1, points_radius);
                 db.setPointAsVisited(loc);
                 spot.remove();
             }
         }
 
         TextView score = (TextView) findViewById(R.id.scoreView);
-        String scoreText = Integer.toString(db.getScore());
+        String scoreText = "Level: " + level;
         score.setText(scoreText);
     }
 

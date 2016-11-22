@@ -109,10 +109,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    /**
-     * this is very similar to the function abow... need to make the code better if we have time.
-     * @return
-     */
     public GeoLocation[] fetchAll(){
         SQLiteDatabase db = this.getWritableDatabase();
 
