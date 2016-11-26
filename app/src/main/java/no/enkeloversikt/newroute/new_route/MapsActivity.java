@@ -29,6 +29,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import no.enkeloversikt.newroute.new_route.database.DatabaseHelper;
 import no.enkeloversikt.newroute.new_route.database.GeoLocation;
@@ -40,7 +41,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private DatabaseHelper db;
 
-    public double longitude, latitude;
+    public double latitude = 0.0;
+    public double longitude = 0.0;
 
     static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -143,6 +145,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if(lastKnownLocation != null){
+            apiProgress.hide();
+            apiProgress.dismiss();
+
+            latitude = lastKnownLocation.getLatitude();
+            longitude = lastKnownLocation.getLongitude();
+
+            setLocations(latitude, longitude);
+        }
+
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 apiProgress.hide();
@@ -170,6 +184,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListener);
     }
     public void updateCamera(double lat, double lng){
+        if(mMap == null) return;
+
         LatLng current = new LatLng(lat, lng);
         if(firstTimeLoadLocation){
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(current, 15f));
@@ -205,7 +221,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     public void setLocations(double lat, double lng){
-        updateCamera(latitude, longitude);
+        if(mMap == null) return;
+        if(latitude == 0.0) return;
+        if(longitude == 0.0) return;
+
+        updateCamera(lat, lng);
+
         GeoLocation[] allGeoLocs = db.fetchAll();
 
         String level = db.fetchType("level");
@@ -216,8 +237,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if(allGeoLocs.length < 1){
             int lvl = Integer.parseInt(level);
-            double points = Math.sqrt(lvl * 1.5);
-            db.createNewPoints(lat, lng, (int) points, points_radius);
+            double points = (int) (lvl * 1.5 + 1);
+
+            if(points > 10){
+                points = 10;
+            }
+
+            int radius = points_radius * lvl/4;
+
+            if(radius < 250){
+                radius = 250;
+            }
+
+            if(radius > 3000){
+                radius = 3000;
+            }
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
+            alert.setTitle("Level " + lvl);
+            alert.setMessage("Congratulations you are now level " + lvl + ", catch " + (int) points + " more to level up. Radius: " + radius);
+            alert.setPositiveButton(R.string.ok, null);
+            alert.show();
+
+            db.createNewPoints(lat, lng, (int) points, radius);
             allGeoLocs = db.fetchAll();
         }
 
@@ -236,15 +278,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if( results[0] < spot.getRadius() ){
                 vib.vibrate(500);
-
                 AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
                 alert.setTitle(R.string.alert_title);
                 alert.setMessage(R.string.congratulations);
                 alert.setPositiveButton(R.string.ok,null);
                 alert.show();
-
-
-                //db.createNewPoints(lat, lng, 1, points_radius);
                 db.setPointAsVisited(loc);
                 spot.remove();
             }
@@ -269,17 +307,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         mMap.setMyLocationEnabled(true);
 
-        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        setLocations(latitude, longitude);
 
-        if(lastKnownLocation != null){
-            apiProgress.hide();
-            apiProgress.dismiss();
+        mMap.setMyLocationEnabled(true);
 
-            latitude = lastKnownLocation.getLatitude();
-            longitude = lastKnownLocation.getLongitude();
-
-            setLocations(latitude, longitude);
-        }
     }
 
 }

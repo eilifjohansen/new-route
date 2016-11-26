@@ -10,25 +10,28 @@ import java.util.Random;
 
 public class LatLngCalculation {
 
-    public double getRandom(){
-        Random r = new Random();
-        return r.nextDouble();
-    }
-
     public GeoLocation newRandomLocation(double lat, double lng, int radius){
-        double u = getRandom();
-        double v = getRandom();
-        double r = radius / 111300f;
+        Random random = new Random();
 
-        double w = r * Math.sqrt(u);
+        // Convert radius from meters to degrees
+        double radiusInDegrees = radius / 111000f;
+
+        double u = random.nextDouble();
+        double v = random.nextDouble();
+        double w = radiusInDegrees * Math.sqrt(u);
         double t = 2 * Math.PI * v;
         double x = w * Math.cos(t);
         double y = w * Math.sin(t);
-        double lat1 = x / Math.cos(lat);
+
+        // Adjust the x-coordinate for the shrinking of the east-west distances
+        double new_x = x / Math.cos(lat);
+
+        double foundLongitude = new_x + lng;
+        double foundLatitude = y + lat;
 
         GeoLocation loc =  new GeoLocation();
-        loc.setLat(lat1 + lat);
-        loc.setLng(y + lng);
+        loc.setLat(foundLatitude);
+        loc.setLng(foundLongitude);
 
         return loc;
     }
