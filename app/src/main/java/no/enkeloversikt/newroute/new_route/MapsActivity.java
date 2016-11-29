@@ -313,4 +313,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
+    public void goToSettings(View view) {
+        Intent intent = new Intent(this, SettingsListActivity.class);
+        startActivity(intent);
+
+    }
 }

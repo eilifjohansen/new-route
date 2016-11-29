@@ -30,7 +30,7 @@ public class FinishedActivity extends AppCompatActivity {
 
         db = new DatabaseHelper(this);
 
-        TextView done = (TextView) findViewById(R.id.done);
+        TextView statsView = (TextView) findViewById(R.id.stats);
 
         String d = db.fetchType("totalDistance");
 
@@ -40,9 +40,9 @@ public class FinishedActivity extends AppCompatActivity {
             dist = Math.round(Float.parseFloat(d));
         }
 
-        String doneText = "Done! You got " + Integer.toString(db.getScore()) + " points, while walking " +
-                dist + "m, congratulations";
-        done.setText(doneText);
+        String statsText = Integer.toString(db.getScore()) + " points · " +
+                dist + "m total";
+        statsView.setText(statsText);
 
         final Intent mapsActivity = new Intent(this, MapsActivity.class);
 

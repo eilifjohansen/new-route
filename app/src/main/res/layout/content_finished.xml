@@ -17,14 +17,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text="Done!"
+        android:text="Session over"
         android:id="@+id/done" />
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/done"
-        android:layout_alignParentStart="true"
-        android:id="@+id/recyclerView" />
+        android:text="stats"
+        android:id="@+id/stats"
+        android:layout_below="@+id/done"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="You've completed this session. Start a new one at any time by pressing the same blue man as before"
+        android:layout_below="@+id/stats"/>
 
 </RelativeLayout>

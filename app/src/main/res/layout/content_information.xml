@@ -17,16 +17,34 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Let's get to some action"
+        android:text="Two steps to get you started"
         android:textSize="24sp"
         android:id="@+id/textView" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="We'll pin a few points on your map, and you'll have to move to the pins to finish."
+        android:text="1. To start a new session, press the little man on the bottom right."
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2. Several red circles will spawn. Go to all of them to unlock next level."
+        android:id="@+id/textView3"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="At any time you can finish up the activity with the stop button. This will save your score and let you start a new session right away or next time you're out."
+        android:id="@+id/textView4"
+        android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true"
         android:layout_marginTop="16dp" />
 </RelativeLayout>

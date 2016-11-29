@@ -22,6 +22,24 @@
         app:backgroundTint="@color/colorAbort"
         app:srcCompat="@drawable/ic_stop_white_24dp" />
 
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="16dp"
+        android:layout_height="64dp"
+        app:layout_anchor="@id/fab"
+        app:layout_anchorGravity="top|center_horizontal" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_settings_white_24dp"
+        android:onClick="goToSettings"
+        app:fabSize="mini"
+        app:backgroundTint="@color/colorSecondaryAction"
+        app:layout_anchor="@id/dummy"
+        app:layout_anchorGravity="top|center_horizontal" />
+
     <TextView
         android:textSize="30sp"
         android:layout_marginTop="20dp"
