@@ -285,8 +285,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             int radius = points_radius * nextLevel / 4;
 
-            if(radius < 250){
-                radius = 250;
+            if(radius < 500){
+                radius = 500;
             }
 
             if(radius > 3000){
@@ -295,7 +295,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
             alert.setTitle("Level " + nextLevel);
-            alert.setMessage("Congratulations you are now level " + nextLevel + ", catch " + points + " more to level up. Radius: " + radius);
+            alert.setMessage("Congratulations you are now level " + nextLevel + ", catch " + points + " more to level up. Radius: " + radius + " meter");
             alert.setPositiveButton(R.string.ok, null);
             alert.show();
 
