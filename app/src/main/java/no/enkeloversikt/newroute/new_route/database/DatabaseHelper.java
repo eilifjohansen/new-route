@@ -167,7 +167,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @param value
      * @return
      */
-    private boolean updateData(String type, String value){
+    public boolean updateData(String type, String value){
 
         SQLiteDatabase db = this.getWritableDatabase();
 

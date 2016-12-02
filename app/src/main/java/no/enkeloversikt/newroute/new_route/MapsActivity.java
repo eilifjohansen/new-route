@@ -62,6 +62,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private boolean firstTimeLoadLocation = true;
 
+    private TextView score;
+
+    private String level;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +76,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
         db = new DatabaseHelper(this);
-
+        score = (TextView) findViewById(R.id.scoreView);
         vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         apiProgress = new ProgressDialog(this);
         apiProgress.setMessage(getString(R.string.loading_location_dialog));
         apiProgress.show();
 
+
+
+
+        level = db.fetchType("level");
+        Log.v("test", "onCreate1: " + db.fetchType("level"));
+        if(level == null){
+            db.updateOrInsert("level", "0");
+            level = "0";
+        }
+
+        Log.v("test", "onCreate2: " + db.fetchType("level"));
+
         requestFineLocationPermit();
+
+
 
         final Intent finishedActivity = new Intent(this, FinishedActivity.class);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -222,18 +240,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void setLocations(double lat, double lng){
         if(mMap == null) return;
-        TextView score = (TextView) findViewById(R.id.scoreView);
+
         updateCamera(lat, lng);
 
         GeoLocation[] allGeoLocs = db.fetchAll();
-
-        String level = db.fetchType("level");
-        if(level == null){
-            db.updateOrInsert("level", "0");
-            level = "0";
-        }
-        String scoreText = "Level: " + level;
-        score.setText(scoreText);
 
         float results[] = new float[2];
         mMap.clear();
@@ -262,11 +272,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         allGeoLocs = db.fetchAll();
         if(allGeoLocs.length <= 0){
-            int nextLevel = Integer.parseInt(level) + 1;
-            db.updateOrInsert("level", Integer.toString(nextLevel));
-            scoreText = "Level: " + Integer.toString(nextLevel);
-            score.setText(scoreText);
-            double points = (int) (nextLevel * 1.5 + 1);
+            int nextLevel = Integer.parseInt(level);
+            nextLevel = nextLevel + 1;
+            level = Integer.toString(nextLevel);
+            db.updateData("level", level);
+
+            int points = (int) (nextLevel * 1.5 + 1);
 
             if(points > 10){
                 points = 10;
@@ -284,15 +295,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
             alert.setTitle("Level " + nextLevel);
-            alert.setMessage("Congratulations you are now level " + nextLevel + ", catch " + (int) points + " more to level up. Radius: " + radius);
+            alert.setMessage("Congratulations you are now level " + nextLevel + ", catch " + points + " more to level up. Radius: " + radius);
             alert.setPositiveButton(R.string.ok, null);
             alert.show();
 
-            db.createNewPoints(lat, lng, (int) points, radius);
+            db.createNewPoints(lat, lng, points, radius);
         }
 
-
+        String scoreText = "Level: " + db.fetchType("level");
         score.setText(scoreText);
+
     }
 
     /**
