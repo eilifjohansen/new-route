@@ -23,7 +23,7 @@ public class SettingsListActivity extends AppCompatActivity {
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(db.killPoints()){
+                if(db.killLocations()){
                     Toast.makeText(getBaseContext(), "Location reset", Toast.LENGTH_SHORT).show();
                     startActivity(InformationActivity);
                 } else {
@@ -37,7 +37,7 @@ public class SettingsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(db.killScore()){
-                    Toast.makeText(getBaseContext(), "Score and level reset", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(), "Score reset", Toast.LENGTH_SHORT).show();
                     startActivity(InformationActivity);
                 } else {
                     Toast.makeText(getBaseContext(), "No score to reset.", Toast.LENGTH_SHORT).show();

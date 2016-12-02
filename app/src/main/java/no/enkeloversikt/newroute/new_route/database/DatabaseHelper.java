@@ -83,8 +83,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * removes all points that the user did not walk to, so the app can create new points at the users location.
      * @return
      */
-    public boolean killPoints(){
+    public boolean killLocations(){
         SQLiteDatabase db = this.getWritableDatabase();
+        int level = Integer.parseInt(this.fetchType("level"));
+        if(level < 1){
+            this.updateData("level", "0");
+        } else {
+            this.updateData("level", Integer.toString(level - 1));
+        }
+
 
         return db.delete(tableName, "visited = 0", null) > 0;
 
@@ -92,7 +99,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean killScore(){
         SQLiteDatabase db = this.getWritableDatabase();
-        this.updateOrInsert("level", "0");
+        this.killLocations();
+
+        this.updateData("level", "0");
+
         return db.delete(tableName, "visited = 1", null) > 0;
 
     }
