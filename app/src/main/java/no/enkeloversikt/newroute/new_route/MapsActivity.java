@@ -222,46 +222,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public void setLocations(double lat, double lng){
         if(mMap == null) return;
-        if(latitude == 0.0) return;
-        if(longitude == 0.0) return;
-
+        TextView score = (TextView) findViewById(R.id.scoreView);
         updateCamera(lat, lng);
 
         GeoLocation[] allGeoLocs = db.fetchAll();
 
         String level = db.fetchType("level");
         if(level == null){
-            db.updateOrInsert("level", "1");
-            level = "1";
+            db.updateOrInsert("level", "0");
+            level = "0";
         }
-
-        if(allGeoLocs.length < 1){
-            int lvl = Integer.parseInt(level);
-            double points = (int) (lvl * 1.5 + 1);
-
-            if(points > 10){
-                points = 10;
-            }
-
-            int radius = points_radius * lvl/4;
-
-            if(radius < 250){
-                radius = 250;
-            }
-
-            if(radius > 3000){
-                radius = 3000;
-            }
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
-            alert.setTitle("Level " + lvl);
-            alert.setMessage("Congratulations you are now level " + lvl + ", catch " + (int) points + " more to level up. Radius: " + radius);
-            alert.setPositiveButton(R.string.ok, null);
-            alert.show();
-
-            db.createNewPoints(lat, lng, (int) points, radius);
-            allGeoLocs = db.fetchAll();
-        }
+        String scoreText = "Level: " + level;
+        score.setText(scoreText);
 
         float results[] = new float[2];
         mMap.clear();
@@ -281,15 +253,45 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
                 alert.setTitle(R.string.alert_title);
                 alert.setMessage(R.string.congratulations);
-                alert.setPositiveButton(R.string.ok,null);
+                alert.setPositiveButton(R.string.ok, null);
                 alert.show();
                 db.setPointAsVisited(loc);
                 spot.remove();
             }
         }
 
-        TextView score = (TextView) findViewById(R.id.scoreView);
-        String scoreText = "Level: " + level;
+        allGeoLocs = db.fetchAll();
+        if(allGeoLocs.length <= 0){
+            int nextLevel = Integer.parseInt(level) + 1;
+            db.updateOrInsert("level", Integer.toString(nextLevel));
+            scoreText = "Level: " + Integer.toString(nextLevel);
+            score.setText(scoreText);
+            double points = (int) (nextLevel * 1.5 + 1);
+
+            if(points > 10){
+                points = 10;
+            }
+
+            int radius = points_radius * nextLevel / 4;
+
+            if(radius < 250){
+                radius = 250;
+            }
+
+            if(radius > 3000){
+                radius = 3000;
+            }
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
+            alert.setTitle("Level " + nextLevel);
+            alert.setMessage("Congratulations you are now level " + nextLevel + ", catch " + (int) points + " more to level up. Radius: " + radius);
+            alert.setPositiveButton(R.string.ok, null);
+            alert.show();
+
+            db.createNewPoints(lat, lng, (int) points, radius);
+        }
+
+
         score.setText(scoreText);
     }
 

@@ -92,7 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public boolean killScore(){
         SQLiteDatabase db = this.getWritableDatabase();
-
+        this.updateOrInsert("level", "0");
         return db.delete(tableName, "visited = 1", null) > 0;
 
     }

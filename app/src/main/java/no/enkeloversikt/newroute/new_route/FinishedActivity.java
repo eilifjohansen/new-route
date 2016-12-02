@@ -32,16 +32,14 @@ public class FinishedActivity extends AppCompatActivity {
 
         TextView statsView = (TextView) findViewById(R.id.stats);
 
-        String d = db.fetchType("totalDistance");
-
-        int dist = 0;
-
-        if(d != null) {
-            dist = Math.round(Float.parseFloat(d));
+        String level = db.fetchType("level");
+        if(level == null){
+            db.updateOrInsert("level", "1");
+            level = "1";
         }
 
-        String statsText = Integer.toString(db.getScore()) + " points · " +
-                dist + "m total";
+        String statsText = "You have " + Integer.toString(db.getScore()) + " points and are on level " +
+                level;
         statsView.setText(statsText);
 
         final Intent mapsActivity = new Intent(this, MapsActivity.class);
