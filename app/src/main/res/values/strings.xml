@@ -76,7 +76,7 @@
     <string name="pref_title_ringtone">Ringtone</string>
     <string name="pref_ringtone_silent">Silent</string>
     <string name="pref_title_vibrate">Vibrate</string>
-    <string name="title_activity_finished">New Route</string>
+    <string name="title_activity_finished">Session complete</string>
     <string name="action_stats">Statistics</string>
     <string name="edit_radius">Set Radius</string>
     <string name="edit_radius_sum">This changed the radius of spawing circles.</string>
@@ -87,4 +87,9 @@
     <string name="congratulations">Congratulations you got a point!</string>
     <string name="ok">OK</string>
     <string name="alert_title">Point Captured</string>
+    <string name="app_title">Welcome to New Route</string>
+    <string name="settings_title">Settings</string>
+    <string name="session_complete">Congratulations, session complete!</string>
+    <string name="stats">stats</string>
+    <string name="you_ve_completed_this_session_start_a_new_one_at_any_time_by_pressing_the_same_blue_man_as_before">You\'ve completed this session. Start a new one at any time by pressing the same blue man as before</string>
 </resources>

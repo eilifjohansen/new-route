@@ -17,13 +17,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="24sp"
-        android:text="Session over"
+        android:text="@string/session_complete"
         android:id="@+id/done" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="stats"
+        android:text="@string/stats"
         android:id="@+id/stats"
         android:layout_below="@+id/done"/>
 
@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="You've completed this session. Start a new one at any time by pressing the same blue man as before"
+        android:text="@string/you_ve_completed_this_session_start_a_new_one_at_any_time_by_pressing_the_same_blue_man_as_before"
         android:layout_below="@+id/stats"/>
 
 </RelativeLayout>
