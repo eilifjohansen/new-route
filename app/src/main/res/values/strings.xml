@@ -91,5 +91,5 @@
     <string name="settings_title">Settings</string>
     <string name="session_complete">Congratulations, session complete!</string>
     <string name="stats">stats</string>
-    <string name="you_ve_completed_this_session_start_a_new_one_at_any_time_by_pressing_the_same_blue_man_as_before">You\'ve completed this session. Start a new one at any time by pressing the same blue man as before</string>
+    <string name="you_ve_completed_this_session_start_a_new_one_at_any_time_by_pressing_the_same_blue_man_as_before">You\'ve completed this session and your stats are still going strong. Continue off where you left the same way you entered it last time - the blue button.</string>
 </resources>
