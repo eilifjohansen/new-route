@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1. To start a new session, press the little man on the bottom right."
+        android:text="1. To start a new session, press the blue button on the bottom right."
         android:id="@+id/textView2"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
@@ -42,7 +42,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="At any time you can finish up the activity with the stop button. This will save your score and let you start a new session right away or next time you're out."
+        android:text="At any time you can finish the session with the stop button. This will save your score and let you continue your progress at a later time."
         android:id="@+id/textView4"
         android:layout_below="@+id/textView3"
         android:layout_alignParentStart="true"
